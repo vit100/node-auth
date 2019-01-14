@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 
 _signToken = userId =>  {
-  return jwt.sign({
+  const token= jwt.sign({
     "iat": new Date().getTime(),
   },
     process.env.JSONWEBTOKEN_SECRET,
@@ -11,6 +11,10 @@ _signToken = userId =>  {
       subject: userId,
       expiresIn: '1 day'
     });
+
+   var r = jwt.verify(token,process.env.JSONWEBTOKEN_SECRET)
+
+    return token;
 }
 
 async function signup(req, res, next) {
@@ -31,9 +35,8 @@ async function signup(req, res, next) {
 }
 
 async function login(req, res, next) {
-  const { email, password } = req.value.body;
 
-  const user = await UserModel.findOne({ email, password });
+  const user = req.user;
   if (user) {
     return res.json({ "token": _signToken(user.id) });
   }
@@ -44,10 +47,18 @@ function logout(req, res, next) {
   console.log('logout');
 }
 
+function findById(userId){
+ return UserModel.findById(userId);
+}
 
+function findByEMailPassword(email, password) { 
+  return UserModel.findOne({email, password})
+ }
 
 module.exports = {
   signup,
   login,
-  logout
+  logout,
+  findById,
+  findByEMailPassword
 }
