@@ -1,6 +1,7 @@
 const passport = require('passport');
 const { Strategy: LocalStrategy } = require('passport-local');
 const { Strategy, ExtractJwt } = require('passport-jwt');
+const {Strategy: GoogleStrategy} = require('passport-google-oauth2');
 const UserModel = require('./models/user');
 
 
@@ -35,5 +36,16 @@ passport.use("myLocalStrategy", new LocalStrategy({
   }
 }
 ));
+
+passport.use("googleStrategy", new GoogleStrategy(
+  {
+    clientID:process.env.GOOGLE_APP_ID,
+    clientSecret:process.env.GOOGLE_APP_SECRET,
+    callbackURL:`http://localhost:${process.env.PORT}/auth/google/cb`,
+    scope:"openid"
+  },
+  (err, accessToken, refreshToken,profile,done)=>{
+      if(err){}
+  }));
 
 module.exports = passport;

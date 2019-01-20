@@ -14,5 +14,9 @@ expressPromiseRouter.post('/login',
 
 expressPromiseRouter.post('/logout', (req, res, next) => { });
 
+expressPromiseRouter.get('/google/login',passport.authenticate('googleStrategy'));
+expressPromiseRouter.get('/google/cb',passport.authenticate('googleStrategy'), (req,res)=>{
+  passport //xxxx
+})
 
 module.exports = expressPromiseRouter;
