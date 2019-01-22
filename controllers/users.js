@@ -42,23 +42,8 @@ function logout(req, res, next) {
   console.log('logout');
 }
 
-async function findById(userId) {
-  return await UserModel.findById(userId);
-}
-
-async function findByEMailPassword(email, password) {
-  var userWithSameEmail = await UserModel.findOne({ email });
-
-  if (await bcrypt.compare(password, userWithSameEmail.password)) {
-    return userWithSameEmail;
-  }
-  return null;
-}
-
 module.exports = {
   signup,
   login,
   logout,
-  findById,
-  findByEMailPassword
 }
